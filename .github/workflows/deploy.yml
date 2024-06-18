@@ -26,7 +26,7 @@ jobs:
         sleep 10  
         wget -r -nH --cut-dirs=1 --convert-links --adjust-extension --page-requisites --no-parent http://localhost:8080/
         mkdir -p public
-        mv localhost:8080/* public/
+        mv index.html register.html forgot.html robots.txt favicon.ico public/
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
