@@ -1,0 +1,35 @@
+name: Deploy CI4 to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'  
+
+    - name: Install Composer dependencies
+      run: composer install --no-dev
+
+    - name: Build project
+      run: |
+        php spark serve --port 8080 &
+        sleep 10  
+        wget -r -nH --cut-dirs=1 --convert-links --adjust-extension --page-requisites --no-parent http://localhost:8080/
+        mkdir -p public
+        mv localhost:8080/* public/
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public
